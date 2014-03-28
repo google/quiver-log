@@ -16,7 +16,7 @@ library quiver.log.formatter_test;
 
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
-import 'package:quiver/log.dart';
+import 'package:quiver-log/log.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
@@ -25,8 +25,10 @@ main() {
        LogRecord record =
            new LogRecord(Level.INFO, 'formatted message!', 'root');
        var dateFormat = new DateFormat("MMyy HH:mm:ss.S");
-       expect(BASIC_LOG_FORMATTER.call(record),
-           '${dateFormat.format(record.time)} INFO 0 root formatted message!');
+       var formatRegexp =
+           new RegExp(r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!');
+       print(BASIC_LOG_FORMATTER.call(record));
+       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
      });
   });
 }

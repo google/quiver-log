@@ -1,15 +1,15 @@
 name: quiver-log
-version: 0.1.0
+version: 1.0.0
 authors:
 - Adam Bender <bendera@google.com>
 description: A logging utility for Dart, part of the quiver utilities
 homepage: https://github.com/google/quiver-log
 documentation: http://google.github.io/quiver-log/docs/
 environment:
-  sdk: '>=0.7.2 <0.8.0'
+  sdk: '>=0.8.7'
 dependencies:
-  path: '>=0.7.2 <0.8.0'
-  logging: '>=0.7.2 <0.8.0'
-  intl: '>=0.7.2 <0.8.0'
+  path: '>=0.8.0'
+  logging: '>=0.8.0'
+  intl: '>=0.8.0'
 dev_dependencies:
-  unittest: '>=0.7.2 <0.8.0'
+  unittest: '>=0.8.1'

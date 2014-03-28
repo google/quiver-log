@@ -16,7 +16,7 @@ library quiver.log.appender_test;
 
 import 'dart:async';
 import 'package:logging/logging.dart';
-import 'package:quiver/log.dart';
+import 'package:quiver-log/log.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
@@ -37,10 +37,10 @@ class SimpleLogger implements Logger {
   StreamController<LogRecord> _controller = new StreamController(sync:true);
   Stream<LogRecord> get onRecord => _controller.stream;
 
-  void info(String msg, [exception]) =>
+  void info(String msg, [Object message, StackTrace stackTrace]) =>
     _controller.add(new LogRecord(Level.INFO, msg, 'simple'));
 
-  dynamic noSuchMethod(Invocation i) {}
+  noSuchMethod(Invocation i) {}
 }
 
 class SimpleStringFormatter implements FormatterBase<String>{
