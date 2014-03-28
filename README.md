@@ -12,7 +12,7 @@ http://google.github.io/quiver-log/docs/
 
 Dart's built-in logging utilities are fairly low level. This means each time you
 start a new project you have to copy/paste a bunch of logging configuration
-code to setup output locations for logging formats. Quiver-log provides a set of
+code to setup output locations and logging formats. Quiver-log provides a set of
 higher-level abstractions to make it easier to get logging setup correctly.
 Specifically, there are two new concepts: `appender` and `formatter`. Appenders
 define output locations like the console, http or even in-memory data structures
