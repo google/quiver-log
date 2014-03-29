@@ -6,7 +6,7 @@ manage Dart's built in logging capabilities.
 
 # Documentation
 
-http://google.github.io/quiver-log/docs/
+http://google.github.io/quiver-log/
 
 # The Basics
 
