@@ -2302,7 +2302,7 @@ tQ:{
 "^":"a;M,f1,zO",
 t:function(a,b){if(J.de(b,0)!==!0)H.vh(P.N(b))
 return this.zO},
-$isOd:true}}],["app_bootstrap","file:///usr/local/google/home/bendera/dartdoc-viewer/client/web/index.html_bootstrap.dart",,E,{
+$isOd:true}}],["app_bootstrap","file:///usr/local/google/home/bendera/github/dartdoc-viewer/client/web/index.html_bootstrap.dart",,E,{
 "^":"",
 E24:[function(){$.x2=["package:dartdoc_viewer/components/comment.dart","package:dartdoc_viewer/components/parameters.dart","package:dartdoc_viewer/components/item.dart","package:dartdoc_viewer/components/annotations.dart","package:dartdoc_viewer/components/link.dart","package:dartdoc_viewer/components/type.dart","package:dartdoc_viewer/components/variable-heading.dart","package:dartdoc_viewer/components/variable.dart","package:dartdoc_viewer/components/method.dart","package:dartdoc_viewer/components/typedef.dart","package:dartdoc_viewer/components/category.dart","package:dartdoc_viewer/components/minimap-element.dart","package:dartdoc_viewer/components/homepage.dart","package:dartdoc_viewer/components/class.dart","package:dartdoc_viewer/components/library.dart","package:dartdoc_viewer/components/page.dart","package:dartdoc_viewer/components/results.dart","package:dartdoc_viewer/components/search.dart","package:dartdoc_viewer/components/minimap-library.dart","package:dartdoc_viewer/components/library-panel.dart","package:dartdoc_viewer/components/minimap-class.dart","package:dartdoc_viewer/components/breadcrumbs.dart","package:dartdoc_viewer/components/main.dart","index.html.0.dart"]
 $.uP=!1
@@ -11360,7 +11360,7 @@ static:{"^":"V7K,tmj,Enk,X8,reI,pd,hlK,MHK,JYn,lDu,Z9"}},
 HV:{
 "^":"a;QG<,G1>,iJ,Fl,O0,kc>,I4<",
 bu:function(a){return"["+this.QG.oc+"] "+this.iJ+": "+this.G1},
-static:{"^":"xO"}}}],["metadata","file:///usr/local/google/home/bendera/dartdoc-viewer/client/web/packages/$sdk/lib/html/html_common/metadata.dart",,B,{
+static:{"^":"xO"}}}],["metadata","file:///usr/local/google/home/bendera/github/dartdoc-viewer/client/web/packages/$sdk/lib/html/html_common/metadata.dart",,B,{
 "^":"",
 N6b:{
 "^":"a;T9,Lnw",
