@@ -12,7 +12,11 @@ class Filter {
   String _loggerName;
   String _messageExact;
   RegExp _messageRegex;
-  String _rawMatcher;  // The actual text the person wrote.
+  // In the case of an exact or regex matcher, the user entered a possibly
+  // escaped string. For instance, _messageRegex = new RegExp("\t\n"), which
+  // means the user entered /\t\n/. _rawMatcher contains that text, with a
+  // literal backslash and so forth.
+  String _rawMatcher;
   Level _minLevel;
   Level _exactLevel;
   String _fileName;
@@ -254,10 +258,6 @@ class LogViewer extends PolymerElement  {
   StreamSubscription<LogRecord> _sub;
 
   LogViewer.created() : super.created() {
-    // It's a bit annoying to listen to all modifications related to this object
-    // and start listening there. Ideally we'd have a readonly log to listen to.
-    // Also ideally we'd be able to listen to the appropriate logger here and
-    // be done. But this shouldn't matter without a huge volume of log messages.
     this.changes.listen((change) {
       if (_oldLog == log) {
         return;
@@ -310,10 +310,7 @@ class LogViewer extends PolymerElement  {
     var id = int.parse(elem.id, onError: (e) => -1);
     filters.removeWhere((filter) => filter.id == id);
 
-    // This is a bit of a hammer where we would prefer something elegant.
-    // Specifically, let's say I've scrolled to see a particular record.
-    // If I drop a filter, I want to stay scrolled to that record.
-    // This will do for a first pass, though.
+    // TODO: stay scrolled to roughly the same place.
     messages.clear();
     messages.addAll(_logs.where((record) => !filters.any((filter) => !filter.match(record))));
   }
@@ -324,8 +321,6 @@ class LogViewer extends PolymerElement  {
 
   void addFilter(var filter) {
     if (filter is String) {
-      // TODO person specifying multiple filters?
-      // eg file:foo "bar"
       for (var parsed in Filter.parseAll(filter)) {
         addFilter(parsed);
       }
