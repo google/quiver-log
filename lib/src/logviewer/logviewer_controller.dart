@@ -169,8 +169,16 @@ class Filter {
     if (_messageExact != null && record.message.indexOf(_messageExact) < 0) {
       matches = false;
     }
-    if (_loggerName != null && record.loggerName != _loggerName) {
-      matches = false;
+    if (_loggerName != null) {
+      if (hierarchicalLoggingEnabled) {
+        // Hierarchical logging has dot-separated hierarchies.
+        // So logger ui.calendar.event-highlighter inherits from ui.calendar and ui.
+        if (_loggerName != record.loggerName && !(record.loggerName.startsWith(_loggerName + "."))) {
+          matches = false;
+        }
+      } else {
+        matches = matches && _loggerName == record.loggerName;
+      }
     }
     if (_messageRegex != null) {
       matches = matches && _messageRegex.firstMatch(record.message) != null;

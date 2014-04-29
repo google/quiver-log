@@ -6,8 +6,8 @@ import 'package:quiver_log/src/logviewer/logviewer_controller.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
-  group('Filter', () {
-    group('Parsing', () {
+  group('Filter ->', () {
+    group('Parsing ->', () {
       test('min date', () {
         var dateString = '2014-03-17T05:19:03.000Z';
         var filters = Filter.parseAll("mindate:$dateString");
@@ -46,7 +46,57 @@ main() {
       });
     });
 
-    group('Date matching', () {
+    group('Regex matching ->', () {
+      test('non-matching regex', () {
+        var logRecord = makeLogRecord(message: 'washbourne');
+        // Expects 4th letter to be 's', but it's 'h'.
+        var regexFilter = Filter.parseAll('/wa.sb[ou]{2}rne/')[0];
+        expect(regexFilter.match(logRecord), isFalse);
+      });
+
+      test('matching regex', () {
+        var logRecord = makeLogRecord(message: 'washbourne');
+        var regexFilter = Filter.parseAll('/wa..b[ou]{2}rne/')[0];
+        expect(regexFilter.match(logRecord), isTrue);
+      });
+
+      test('regex found later in message', () {
+        var logRecord = makeLogRecord(message: 'captain washbourne');
+        var regexFilter = Filter.parseAll('/wa..b[ou]{2}rne/')[0];
+        expect(regexFilter.match(logRecord), isTrue);
+      });
+    });
+
+    group('Exact matching ->', () {
+      test('no match', () {
+        // This would match if it were a regex.
+        var logRecord = makeLogRecord(message: 'Kagamine Rin');
+        var regexFilter = Filter.parseAll('"Kagamine .in"')[0];
+        expect(regexFilter.match(logRecord), isFalse);
+      });
+
+      test('full message match', () {
+        var logRecord = makeLogRecord(message: 'Kagamine Rin');
+        var regexFilter = Filter.parseAll('"Kagamine Rin"')[0];
+        expect(regexFilter.match(logRecord), isTrue);
+      });
+
+      test('partial message match', () {
+        var logRecord = makeLogRecord(message: 'Vocaloid Live with Kagamine Rin');
+        var regexFilter = Filter.parseAll('"Kagamine Rin"')[0];
+        expect(regexFilter.match(logRecord), isTrue);
+      });
+
+      test('single word, no quotes', () {
+        var logRecord = makeLogRecord(message: 'Vocaloid Live with Kagamine Rin');
+        var regexFilter = Filter.parseAll('Kagamine')[0];
+        expect(regexFilter.match(logRecord), isTrue);
+      });
+    });
+
+    group('Date matching ->', () {
+      // These tests require calling new DateTime.now() twice and getting different results.
+      // (new LogRecord calls DateTime.now.) Thus the Timer usage.
       test('min date, record too late', () {
         var logRecord = makeLogRecord();
         new Timer(new Duration(milliseconds: 30), expectAsync0(() {
@@ -83,9 +133,96 @@ main() {
         }));
       });
     });
+
+    group('Levels ->', () {
+      test('exact, same level', () {
+        var logRecord = makeLogRecord(level: Level.FINE);
+        var filter = Filter.parseAll('level:fine')[0];
+        expect(filter.match(logRecord), isTrue);
+      });
+
+      test('exact, lower level', () {
+        var logRecord = makeLogRecord(level: Level.FINE);
+        var filter = Filter.parseAll('level:info')[0];
+        expect(filter.match(logRecord), isFalse);
+      });
+
+      test('exact, higher level', () {
+        var logRecord = makeLogRecord(level: Level.INFO);
+        var filter = Filter.parseAll('level:fine')[0];
+        expect(filter.match(logRecord), isFalse);
+      });
+
+      test('at least, same level', () {
+        var logRecord = makeLogRecord(level: Level.FINE);
+        var filter = Filter.parseAll('minlevel:fine')[0];
+        expect(filter.match(logRecord), isTrue);
+      });
+
+      test('at least, lower level', () {
+        var logRecord = makeLogRecord(level: Level.FINE);
+        var filter = Filter.parseAll('minlevel:info')[0];
+        expect(filter.match(logRecord), isFalse);
+      });
+
+      test('at least, higher level', () {
+        var logRecord = makeLogRecord(level: Level.INFO);
+        var filter = Filter.parseAll('minlevel:fine')[0];
+        expect(filter.match(logRecord), isTrue);
+      });
+    });
+
+    group('Logger ->', () {
+      test('same logger name', () {
+        var logRecord = makeLogRecord(logger: 'denton');
+        var filter = Filter.parseAll('logger:denton')[0];
+        expect(filter.match(logRecord), isTrue);
+      });
+
+      test('incompatible logger name', () {
+        var logRecord = makeLogRecord(logger: 'denton');
+        var filter = Filter.parseAll('logger:troy')[0];
+        expect(filter.match(logRecord), isFalse);
+      });
+
+      test('hierarchical matching logger name', () {
+        hierarchicalLoggingEnabled = true;
+        var logRecord = makeLogRecord(logger: 'denton.paul');
+        var filter = Filter.parseAll('logger:denton')[0];
+        expect(filter.match(logRecord), isTrue);
+      });
+
+      test('prefixes are not hierarchies', () {
+        hierarchicalLoggingEnabled = true;
+        var logRecord = makeLogRecord(logger: 'denton.paul');
+        var filter = Filter.parseAll('logger:denton.p')[0];
+        expect(filter.match(logRecord), isFalse);
+      });
+
+      test('hierarchical logging disabled so no match', () {
+        hierarchicalLoggingEnabled = false;
+        var logRecord = makeLogRecord(logger: 'denton.paul');
+        var filter = Filter.parseAll('logger:denton')[0];
+        expect(filter.match(logRecord), isFalse);
+      });
+    });
+
+    group('Inverted ->', () {
+      test('logger name match', () {
+        var logRecord = makeLogRecord(logger: 'denton');
+        var filter = Filter.parseAll('-logger:denton')[0];
+        expect(filter.match(logRecord), isFalse);
+      });
+
+      test('logger name no match', () {
+        var logRecord = makeLogRecord(logger: 'denton');
+        var filter = Filter.parseAll('-logger:paul')[0];
+        expect(filter.match(logRecord), isTrue);
+      });
+    });
   });
 }
 
-LogRecord makeLogRecord() {
-  return new LogRecord(Level.FINE, "message", "logger");
+LogRecord makeLogRecord({String message: 'message', Level level: Level.FINE, String logger: 'logger'}) {
+  return new LogRecord(level, message, logger);
 }
