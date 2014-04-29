@@ -2,7 +2,7 @@ library quiver.log.logviewer_test;
 
 import 'dart:async';
 import 'package:logging/logging.dart';
-import 'package:quiver-log/logviewer/logviewer.dart';
+import 'package:quiver_log/src/logviewer/logviewer_controller.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
@@ -48,32 +48,44 @@ main() {
 
     group('Date matching', () {
       test('min date, record too late', () {
-        var logRecord = new LogRecord();
-        var date = new DateTime.now();
-        var filter = Filter.parseAll("mindate:${date.toIso8601String()}")[0];
-        expect(filter.match(logRecord), isFalse);
+        var logRecord = makeLogRecord();
+        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+          var date = new DateTime.now();
+          var filter = Filter.parseAll("mindate:${date.toIso8601String()}")[0];
+          expect(filter.match(logRecord), isFalse);
+        }));
       });
 
       test('min date, record early enough', () {
         var date = new DateTime.now();
-        var logRecord = new LogRecord();
-        var filter = Filter.parseAll("mindate:${date.toIso8601String()}")[0];
-        expect(filter.match(logRecord), isTrue);
+        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+          var logRecord = makeLogRecord();
+          var filter = Filter.parseAll("mindate:${date.toIso8601String()}")[0];
+          expect(filter.match(logRecord), isTrue);
+        }));
       });
 
       test('max date, record late enough', () {
-        var logRecord = new LogRecord();
-        var date = new DateTime.now();
-        var filter = Filter.parseAll("maxdate:${date.toIso8601String()}")[0];
-        expect(filter.match(logRecord), isTrue);
+        var logRecord = makeLogRecord();
+        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+          var date = new DateTime.now();
+          var filter = Filter.parseAll("maxdate:${date.toIso8601String()}")[0];
+          expect(filter.match(logRecord), isTrue);
+        }));
       });
 
       test('max date, record too early', () {
         var date = new DateTime.now();
-        var logRecord = new LogRecord();
-        var filter = Filter.parseAll("maxdate:${date.toIso8601String()}")[0];
-        expect(filter.match(logRecord), isFalse);
+        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+          var logRecord = makeLogRecord();
+          var filter = Filter.parseAll("maxdate:${date.toIso8601String()}")[0];
+          expect(filter.match(logRecord), isFalse);
+        }));
       });
     });
   });
+}
+
+LogRecord makeLogRecord() {
+  return new LogRecord(Level.FINE, "message", "logger");
 }

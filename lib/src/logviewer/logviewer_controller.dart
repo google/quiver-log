@@ -231,10 +231,10 @@ class Filter {
       str += "file:$_fileName ";
     }
     if (_minDate != null) {
-      str += "mindate:$_minDate ";
+      str += "mindate:${_minDate.toIso8601String()} ";
     }
     if (_maxDate != null) {
-      str += "maxdate:$_maxDate ";
+      str += "maxdate:${_maxDate.toIso8601String()} ";
     }
     str = str.trim();
     if (_invert) {
