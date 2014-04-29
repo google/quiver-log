@@ -10,6 +10,6 @@ dependencies:
   intl: '>=0.8.0'
   logging: '>=0.8.0'
   path: '>=0.8.0'
-  polymer: any
+  polymer: '>=0.8.10'
 dev_dependencies:
   unittest: '>=0.8.1'
