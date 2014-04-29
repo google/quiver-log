@@ -6,8 +6,8 @@ import 'package:quiver_log/src/logviewer/logviewer_controller.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
-  group('Filter ->', () {
-    group('Parsing ->', () {
+  group('Filter', () {
+    group('Parsing', () {
       test('min date', () {
         var dateString = '2014-03-17T05:19:03.000Z';
         var filters = Filter.parseAll("mindate:$dateString");
@@ -46,7 +46,7 @@ main() {
       });
     });
 
-    group('Regex matching ->', () {
+    group('Regex matching', () {
       test('non-matching regex', () {
         var logRecord = makeLogRecord(message: 'washbourne');
         // Expects 4th letter to be 's', but it's 'h'.
@@ -67,7 +67,7 @@ main() {
       });
     });
 
-    group('Exact matching ->', () {
+    group('Exact matching', () {
       test('no match', () {
         // This would match if it were a regex.
         var logRecord = makeLogRecord(message: 'Kagamine Rin');
@@ -94,7 +94,7 @@ main() {
       });
     });
 
-    group('Date matching ->', () {
+    group('Date matching', () {
       // These tests require calling new DateTime.now() twice and getting different results.
       // (new LogRecord calls DateTime.now.) Thus the Timer usage.
       test('min date, record too late', () {
@@ -134,7 +134,7 @@ main() {
       });
     });
 
-    group('Levels ->', () {
+    group('Levels', () {
       test('exact, same level', () {
         var logRecord = makeLogRecord(level: Level.FINE);
         var filter = Filter.parseAll('level:fine')[0];
@@ -172,7 +172,7 @@ main() {
       });
     });
 
-    group('Logger ->', () {
+    group('Logger', () {
       test('same logger name', () {
         var logRecord = makeLogRecord(logger: 'denton');
         var filter = Filter.parseAll('logger:denton')[0];
@@ -207,7 +207,7 @@ main() {
       });
     });
 
-    group('Inverted ->', () {
+    group('Inverted', () {
       test('logger name match', () {
         var logRecord = makeLogRecord(logger: 'denton');
         var filter = Filter.parseAll('-logger:denton')[0];
