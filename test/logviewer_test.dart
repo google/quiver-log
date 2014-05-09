@@ -2,7 +2,9 @@ library quiver.log.logviewer_test;
 
 import 'dart:async';
 import 'package:logging/logging.dart';
-import 'package:quiver_log/src/logviewer/logviewer_controller.dart';
+import 'package:mock/mock.dart' as mock;
+import 'package:matcher/matcher.dart';
+import 'package:quiver_log/components/logviewer_controller.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
@@ -219,6 +221,94 @@ main() {
         var filter = Filter.parseAll('-logger:paul')[0];
         expect(filter.match(logRecord), isTrue);
       });
+    });
+  });
+
+  group('Controller', () {
+    test('showSomeMessages', () {
+      var logName = 'denton.jc';
+      var mockView = new mock.Mock();
+      var messages = [];
+      mockView.when(mock.callsTo('get logName')).alwaysReturn(logName);
+      mockView.when(mock.callsTo('get messages')).alwaysReturn(messages);
+      mockView.when(mock.callsTo('consistentScrollingDuringMutation', anything))
+          .alwaysCall((x) => x());
+
+      var controller = new LogViewerController(mockView);
+      // Now send a few log messages...
+      var logger = new Logger(logName);
+      logger.info('Tracer Tong is here');
+      logger.info('Paul Denton is here');
+      expect(mockView.messages.length, equals(2));
+      expect(mockView.messages[0].message, equals('Tracer Tong is here'));
+      expect(mockView.messages[1].message, equals('Paul Denton is here'));
+    });
+
+    test('filterOutAMessage', () {
+      var logName = 'denton.jc';
+      var mockView = new mock.Mock();
+      var messages = [];
+      mockView.when(mock.callsTo('get logName')).alwaysReturn(logName);
+      mockView.when(mock.callsTo('get messages')).alwaysReturn(messages);
+      mockView.when(mock.callsTo('consistentScrollingDuringMutation', anything))
+          .alwaysCall((x) => x());
+
+      var controller = new LogViewerController(mockView);
+      // Now send a few log messages...
+      var logger = new Logger(logName);
+      logger.info('Tracer Tong is here');
+      logger.info('Paul Denton is here');
+      controller.addFilter('Denton');
+      expect(mockView.messages.length, equals(1));
+      expect(mockView.messages[0].message, equals('Paul Denton is here'));
+    });
+
+    test('killAFilterShowsNewSetOfFilters', () {
+      var logName = 'denton.jc';
+      var mockView = new mock.Mock();
+      var messages = [];
+      mockView.when(mock.callsTo('get logName')).alwaysReturn(logName);
+      expect(mockView.logName, equals(logName));
+      mockView.when(mock.callsTo('get messages')).alwaysReturn(messages);
+      expect(mockView.messages, equals(messages));
+
+      var controller = new LogViewerController(mockView);
+      controller.addFilter('/foo/');
+      controller.addFilter('/bar/');
+      controller.addFilter('/baz/');
+      var oldFilters = controller.filters.toList();
+      controller.killFilter(oldFilters[1].id);
+      mockView.getLogs(mock.callsTo('showFilters', [oldFilters[0], oldFilters[2]]))
+          .verify(mock.happenedAtLeast(1));
+    });
+
+    test('killAFilterShowsPreviouslyFilteredOutMessages', () {
+      var logName = 'denton.jc';
+      var mockView = new mock.Mock();
+      var messages = [];
+      mockView.when(mock.callsTo('get logName')).alwaysReturn(logName);
+      mockView.when(mock.callsTo('get messages')).alwaysReturn(messages);
+      mockView.when(mock.callsTo('consistentScrollingDuringMutation', anything))
+          .alwaysCall((x) => x());
+
+      var controller = new LogViewerController(mockView);
+      // Now send a few log messages...
+      var logger = new Logger(logName);
+      logger.info('Tracer Tong is here');
+      logger.info('Paul Denton is here');
+      logger.info('Tracer Tong has left');
+      logger.severe('Kill switch activated');
+      controller.addFilter(new Filter.parse('is here'));
+      controller.addFilter('Tong');
+      // Only one left.
+      expect(mockView.messages.length, equals(1));
+      expect(mockView.messages[0].message, equals('Tracer Tong is here'));
+
+      controller.killFilter(controller.filters[1].id);
+      // Should be showing the first two messages.
+      expect(mockView.messages.length, equals(2));
+      expect(mockView.messages[0].message, equals('Tracer Tong is here'));
+      expect(mockView.messages[1].message, equals('Paul Denton is here'));
     });
   });
 }

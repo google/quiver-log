@@ -22,6 +22,13 @@ class LogViewer extends PolymerElement  {
     });
   }
 
+  // This is mainly a hack for testing. Instead of the controller directly
+  // accessing the @published field, we use logName. Normally we wouldn't care,
+  // though it might be slightly cleaner to separate the attribute from what the
+  // controller accesses. However, unittest.mock.Mock has a concrete field 'log'
+  // that means you can't mock an object with a field named 'log'.
+  get logName => log;
+
   void consistentScrollingDuringMutation(mutation) {
     if (shadowRoot == null) {
       mutation();

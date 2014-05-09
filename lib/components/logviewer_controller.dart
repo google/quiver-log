@@ -264,14 +264,15 @@ class LogViewerController {
   }
   
   void logMayHaveChanged() {
-    if (_log == view.log) {
+    String newLog = view.logName;
+    if (_log == newLog) {
       return;
     }
     if (_sub != null) {
       _sub.cancel();
     }
-    _sub = new Logger(view.log).onRecord.listen(appendRecord);
-    _log = view.log;
+    _sub = new Logger(newLog).onRecord.listen(appendRecord);
+    _log = newLog;
   }
   
   void appendRecord(LogRecord logRecord) {
