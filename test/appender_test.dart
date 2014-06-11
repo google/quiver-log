@@ -16,7 +16,7 @@ library quiver.log.appender_test;
 
 import 'dart:async';
 import 'package:logging/logging.dart';
-import 'package:quiver-log/log.dart';
+import 'package:quiver_log/log.dart';
 import 'package:unittest/unittest.dart';
 
 main() {

@@ -16,7 +16,7 @@ library quiver.log.formatter_test;
 
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
-import 'package:quiver-log/log.dart';
+import 'package:quiver_log/log.dart';
 import 'package:unittest/unittest.dart';
 
 main() {
