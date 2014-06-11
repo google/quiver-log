@@ -24,7 +24,11 @@ Here is a simple example that sets up a `InMemoryAppender` with a
 
 ```
 import 'package:logging/logging.dart';
-import 'package:quiver/log.dart';
+import 'package:quiver_log/log.dart';
+
+class SimpleStringFormatter implements FormatterBase<String> {
+  String call(LogRecord record) => record.message;
+}
 
 main() {
   var logger = new Logger('quiver.TestLogger');
