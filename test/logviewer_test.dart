@@ -101,7 +101,7 @@ main() {
       // (new LogRecord calls DateTime.now.) Thus the Timer usage.
       test('min date, record too late', () {
         var logRecord = makeLogRecord();
-        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+        new Timer(new Duration(milliseconds: 30), expectAsync(() {
           var date = new DateTime.now();
           var filter = Filter.parseAll("mindate:${date.toIso8601String()}")[0];
           expect(filter.match(logRecord), isFalse);
@@ -110,7 +110,7 @@ main() {
 
       test('min date, record early enough', () {
         var date = new DateTime.now();
-        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+        new Timer(new Duration(milliseconds: 30), expectAsync(() {
           var logRecord = makeLogRecord();
           var filter = Filter.parseAll("mindate:${date.toIso8601String()}")[0];
           expect(filter.match(logRecord), isTrue);
@@ -119,7 +119,7 @@ main() {
 
       test('max date, record late enough', () {
         var logRecord = makeLogRecord();
-        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+        new Timer(new Duration(milliseconds: 30), expectAsync(() {
           var date = new DateTime.now();
           var filter = Filter.parseAll("maxdate:${date.toIso8601String()}")[0];
           expect(filter.match(logRecord), isTrue);
@@ -128,7 +128,7 @@ main() {
 
       test('max date, record too early', () {
         var date = new DateTime.now();
-        new Timer(new Duration(milliseconds: 30), expectAsync0(() {
+        new Timer(new Duration(milliseconds: 30), expectAsync(() {
           var logRecord = makeLogRecord();
           var filter = Filter.parseAll("maxdate:${date.toIso8601String()}")[0];
           expect(filter.match(logRecord), isFalse);

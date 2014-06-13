@@ -16,9 +16,11 @@ library quiver.log.all_tests;
 
 import 'appender_test.dart' as appender;
 import 'formatter_test.dart' as formatter;
+import 'logviewer_test.dart' as logviewer;
 
 main() {
   appender.main();
   formatter.main();
+  logviewer.main();
 }
 
