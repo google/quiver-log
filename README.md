@@ -39,9 +39,9 @@ main() {
 
 That's all there is to it!
 
-Quiver-log provides two `Appender`s: `PrintAppender`
-which uses Dart's print statement to write to the console and
-`InMemoryListAppender` which writes logs to a simple list (this can be useful for debugging or testing). Additionally, a single `Formatter` called
+Quiver-log provides three `Appender`s: `PrintAppender`
+which uses Dart's print statement to write to the console, 
+`InMemoryListAppender` which writes logs to a simple list (this can be useful for debugging or testing) and a `WebAppender` which will take advantage of web console methods to improve readability in your browser. Additionally, a single `Formatter` called
 `BasicLogFormatter` is included and uses a "MMyy HH:mm:ss.S" format. Of course
 there is no limit to what kind of appenders you can create, we have plans to
 add appenders HTTP, WebSocket, DOM, Isolate and SysOut.
