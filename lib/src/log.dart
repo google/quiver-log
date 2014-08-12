@@ -75,7 +75,7 @@ abstract class FormatterBase<T> {
  * Formats log messages using a simple pattern
  */
 class BasicLogFormatter implements FormatterBase<String>{
-  static final DateFormat _dateFormat = new DateFormat("MMyy HH:mm:ss.S");
+  static final DateFormat _dateFormat = new DateFormat("yyMMdd HH:mm:ss.S");
 
   const BasicLogFormatter();
   /**
