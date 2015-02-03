@@ -83,12 +83,23 @@ class BasicLogFormatter implements FormatterBase<String>{
    *
    * MMyy HH:MM:ss.S level sequence loggerName message
    */
-  String call(LogRecord record) =>
+  String call(LogRecord record) {
+    var formattedMessage =
       "${_dateFormat.format(record.time)} "
       "${record.level} "
       "${record.sequenceNumber} "
       "${record.loggerName} "
       "${record.message}";
+
+    if (record.error != null) {
+      formattedMessage = "$formattedMessage\n    ${record.error}";
+    }
+
+    if (record.stackTrace != null) {
+      formattedMessage = "$formattedMessage\n    ${record.stackTrace}";
+    }
+    return formattedMessage;
+  }
 }
 
 /**

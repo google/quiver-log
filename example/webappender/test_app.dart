@@ -18,4 +18,9 @@ main() {
   _logger.severe('severe message');
   _logger.shout('severe message');
 
+  try {
+    throw 'sample exception';
+  } catch(e, s) {
+    _logger.severe('caught an exception', e, s);
+  }
 }

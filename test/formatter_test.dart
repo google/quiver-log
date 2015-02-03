@@ -21,14 +21,26 @@ import 'package:unittest/unittest.dart';
 
 main() {
   group('BasicLogFormatter', (){
-     test('correctly formats LogRecord', (){
-       LogRecord record =
-           new LogRecord(Level.INFO, 'formatted message!', 'root');
-       var dateFormat = new DateFormat("MMyy HH:mm:ss.S");
-       var formatRegexp =
-           new RegExp(r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!');
-       print(BASIC_LOG_FORMATTER.call(record));
-       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
-     });
+    test('correctly formats LogRecord', () {
+      LogRecord record =
+          new LogRecord(Level.INFO, 'formatted message!', 'root');
+      var dateFormat = new DateFormat("MMyy HH:mm:ss.S");
+      var formatRegexp =
+          new RegExp(r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!$');
+      expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
+    });
+
+    test('correctly formats LogRecord with exception', () {
+      try {
+        throw 'test exception';
+      } catch (e, s) {
+        LogRecord record =
+            new LogRecord(Level.INFO, 'formatted message!', 'root', e, s);
+        var dateFormat = new DateFormat("MMyy HH:mm:ss.S");
+        var formatExceptionRegexp =
+            new RegExp(r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!\n\s+test exception\n\s+#\d+[\s\w.<>():/-]*:\d+:\d+');
+        expect(BASIC_LOG_FORMATTER.call(record), matches(formatExceptionRegexp));
+      }
+    });
   });
 }
