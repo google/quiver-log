@@ -17,13 +17,11 @@ library quiver.log.webappender_test;
 import 'dart:html';
 
 import 'package:logging/logging.dart';
-import 'package:quiver_log/web.dart';
-import 'package:unittest/html_config.dart';
-import 'package:unittest/unittest.dart';
 import 'package:quiver_log/log.dart';
+import 'package:quiver_log/web.dart';
+import "package:test/test.dart";
 
 main() {
-  useHtmlConfiguration();
   WebAppender webAppender;
   Logger logger;
   FakeConsole fakeConsole;
