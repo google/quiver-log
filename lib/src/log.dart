@@ -49,14 +49,14 @@ abstract class Appender<T> {
   void stop() => _subscriptions.forEach((s) => s.cancel());
 }
 
-typedef T Formatter<T>(LogRecord record);
+/// Interface defining log formatter.
+abstract class Formatter<T> {
+  /// Returns a message of type T based on provided [LogRecord].
+  T call(LogRecord record);
+}
 
 /// Formatter accepts a [LogRecord] and returns a T
-abstract class FormatterBase<T> {
-  //TODO(bendera): wasnt sure if formatter should be const, but it seems like
-  //if we intend for them to eventually be only functions then it make sense.
-  const FormatterBase();
-
+abstract class FormatterBase<T> extends Formatter<T> {
   /// Formats a given [LogRecord] returning type T as a result
   T call(LogRecord record);
 }
@@ -97,7 +97,7 @@ class PrintAppender extends Appender<String> {
 
   @override
   void append(LogRecord record, Formatter<String> formatter) {
-    print(formatter(record));
+    print(formatter.call(record));
   }
 }
 
@@ -111,6 +111,6 @@ class InMemoryListAppender extends Appender<Object> {
 
   @override
   void append(LogRecord record, Formatter<Object> formatter) {
-    messages.add(formatter(record));
+    messages.add(formatter.call(record));
   }
 }
