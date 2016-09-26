@@ -11,4 +11,3 @@ dependencies:
   logging: '>=0.9.0'
 dev_dependencies:
   test: '>=0.12.13'
-  mock: '>=0.10.0'
