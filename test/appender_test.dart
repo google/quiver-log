@@ -37,8 +37,8 @@ class SimpleLogger implements Logger {
   StreamController<LogRecord> _controller = new StreamController(sync:true);
   Stream<LogRecord> get onRecord => _controller.stream;
 
-  void info(msg, [Object message, StackTrace stackTrace]) =>
-    _controller.add(new LogRecord(Level.INFO, msg, 'simple'));
+  void info(message, [Object error, StackTrace stackTrace]) =>
+    _controller.add(new LogRecord(Level.INFO, message, 'simple'));
 
   noSuchMethod(Invocation i) {}
 }
