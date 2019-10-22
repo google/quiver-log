@@ -1,4 +1,4 @@
-// Copyright 2013 Google Inc. All Rights Reserved.
+// Copyright 2019 Google Inc. All Rights Reserved.
 
 //
 // Licensed under the Apache License, Version 2.0 (the 'License');
@@ -21,49 +21,84 @@ part of quiver.log;
 ///
 /// Generally an Appender recieves a log message from the attached logger
 /// streams, runs it through the formatter and then outputs it.
-abstract class Appender<T> {
+abstract class Appender {
   final List<StreamSubscription> _subscriptions = [];
-  final Formatter<T> formatter;
+  final Formatter formatter;
 
   Appender(this.formatter);
 
-  //TODO(bendera): What if we just handed in the stream? Does it need to be a
-  //Logger or just a stream of LogRecords?
-
   /// Attaches a logger to this appender
   void attachLogger(Logger logger) {
-    _subscriptions.add(logger.onRecord.listen((LogRecord r) {
+    _subscriptions.add(logger.onRecord.listen(_append));
+  }
+
+  void _append(LogRecord r) {
+    try {
+      append(r, formatter);
+    } catch (error, stack) {
       try {
-        append(r, formatter);
-      } catch (e) {
-        //will keep the logger from downing the app, how best to notify the
-        //app here?
+        // Attempt to output one more time with a safe formatter and
+        // information about the error.
+        var errorRecord = LogRecord(
+            Level.SHOUT,
+            'Appender failed to append log message. Original message: $r',
+            '$_ErrorDiagnosticFormatter',
+            error,
+            stack);
+        append(errorRecord, _diagnosticFormatter);
+      } catch (e, s) {
+        // Even the diagnostic formatter failed, now it's time to give up.
+        // In dev we will attempt to crash the app as this must be a
+        // programming error.
+        assert(
+            false,
+            'Appender failed to append log message: error: $e\nstack '
+            'trace: $s');
       }
-    }));
+    }
   }
 
   /// Each appender should implement this method to perform custom log output.
-  void append(LogRecord record, Formatter<T> formatter);
+  void append(LogRecord record, Formatter formatter);
 
   /// Terminate this Appender and cancel all logging subscriptions.
   void stop() => _subscriptions.forEach((s) => s.cancel());
 }
 
 /// Interface defining log formatter.
-abstract class Formatter<T> {
+abstract class Formatter {
   /// Returns a message of type T based on provided [LogRecord].
-  T call(LogRecord record);
+  String call(LogRecord record);
 }
 
-/// Formatter accepts a [LogRecord] and returns a T
-abstract class FormatterBase<T> extends Formatter<T> {
-  /// Formats a given [LogRecord] returning type T as a result
-  T call(LogRecord record);
+/// Prints the contents of a [LogRecord] in key:value format.
+///
+/// This formatter is used as a fallback in situations where the configured
+/// formatter throws an exception or error. All of the details of the log
+/// record are dumped in a key:value format.
+class _ErrorDiagnosticFormatter implements Formatter {
+  const _ErrorDiagnosticFormatter();
+
+  String call(LogRecord record) {
+    var message = 'time: ${record.time} '
+        'level: ${record.level} '
+        'loggerName: ${record.loggerName} '
+        'message: ${record.message}';
+    if (record.error != null) {
+      message = '$message\nerror: ${record.error}';
+    }
+    if (record.stackTrace != null) {
+      message = '$message\nstackTrace: ${record.stackTrace}';
+    }
+    return message;
+  }
 }
+
+const _diagnosticFormatter = const _ErrorDiagnosticFormatter();
 
 /// Formats log messages using a simple pattern
-class BasicLogFormatter implements FormatterBase<String> {
-  static final DateFormat _dateFormat = new DateFormat('yyMMdd HH:mm:ss.S');
+class BasicLogFormatter implements Formatter {
+  static final DateFormat _dateFormat = DateFormat('yyMMdd HH:mm:ss.S');
 
   const BasicLogFormatter();
 
@@ -79,7 +114,7 @@ class BasicLogFormatter implements FormatterBase<String> {
     if (record.error != null) {
       message = '$message, error: ${record.error}';
     }
-    if (record.stackTrace!= null) {
+    if (record.stackTrace != null) {
       message = '$message, stackTrace: ${record.stackTrace}';
     }
     return message;
@@ -87,30 +122,29 @@ class BasicLogFormatter implements FormatterBase<String> {
 }
 
 /// Default instance of the BasicLogFormatter
-const BASIC_LOG_FORMATTER = const BasicLogFormatter();
+const BasicLogFormatter basicLogFormatter = const BasicLogFormatter();
 
 /// Appends string messages to the console using print function
-class PrintAppender extends Appender<String> {
-
-  /// Returns a new ConsoleAppender with the given [Formatter<String>]
-  PrintAppender(Formatter<String> formatter) : super(formatter);
+class PrintAppender extends Appender {
+  /// Returns a new ConsoleAppender with the given [Formatter]
+  PrintAppender(Formatter formatter) : super(formatter);
 
   @override
-  void append(LogRecord record, Formatter<String> formatter) {
+  void append(LogRecord record, Formatter formatter) {
     print(formatter.call(record));
   }
 }
 
 /// Appends string messages to the messages list. Note that this logger does not
 /// ever truncate so only use for diagnostics or short lived applications.
-class InMemoryListAppender extends Appender<Object> {
-  final List<Object> messages = [];
+class InMemoryListAppender extends Appender {
+  final List<String> messages = [];
 
-  /// Returns a new InMemoryListAppender with the given [Formatter<String>]
-  InMemoryListAppender(Formatter<Object> formatter) : super(formatter);
+  /// Returns a new InMemoryListAppender with the given [Formatter]
+  InMemoryListAppender(Formatter formatter) : super(formatter);
 
   @override
-  void append(LogRecord record, Formatter<Object> formatter) {
+  void append(LogRecord record, Formatter formatter) {
     messages.add(formatter.call(record));
   }
 }
