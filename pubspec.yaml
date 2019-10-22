@@ -1,5 +1,5 @@
 name: quiver_log
-version: 1.0.7
+version: 1.0.7-dev.1
 author: Adam Bender <bendera@google.com>
 description: A logging utility for Dart, part of the quiver utilities
 homepage: https://github.com/google/quiver-log
