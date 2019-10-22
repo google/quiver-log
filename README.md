@@ -27,13 +27,13 @@ Here is a simple example that sets up a `InMemoryAppender` with a
 import 'package:logging/logging.dart';
 import 'package:quiver_log/log.dart';
 
-class SimpleStringFormatter implements FormatterBase<String> {
+class SimpleStringFormatter implements Formatter {
   String call(LogRecord record) => record.message;
 }
 
 main() {
-  var logger = new Logger('quiver.TestLogger');
-  var appender = new InMemoryListAppender(new SimpleStringFormatter());
+  var logger = Logger('quiver.TestLogger');
+  var appender = InMemoryListAppender(SimpleStringFormatter());
   appender.attachLogger(logger);
 }
 ```
@@ -47,6 +47,6 @@ which uses Dart's print statement to write to the console,
 there is no limit to what kind of appenders you can create, we have plans to
 add appenders HTTP, WebSocket, DOM, Isolate and SysOut.
 
-To create a new kind of `Appender` simply extends `Appender`. To create a new
-`Formatter` just implement the `Formatter` typedef or `FormatterBase` class if
-you need to hold state in your formtatter. Take a look at PrintAppender and BasicLogFormatter for an example.
+To create a new kind of `Appender` simply extend `Appender`. To create a new
+`Formatter` just implement the `Formatter` abstract class. Take a look at
+PrintAppender and BasicLogFormatter for an example.

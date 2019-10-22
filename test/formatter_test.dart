@@ -1,4 +1,4 @@
-// Copyright 2013 Google Inc. All Rights Reserved.
+// Copyright 2019 Google Inc. All Rights Reserved.
 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +22,8 @@ import "package:test/test.dart";
 main() {
   group('BasicLogFormatter', () {
     test('correctly formats LogRecord', () {
-      LogRecord record =
-      new LogRecord(Level.INFO, 'formatted message!', 'root');
-      var formatRegexp =
-      new RegExp(
+      LogRecord record = LogRecord(Level.INFO, 'formatted message!', 'root');
+      var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!');
       print(BASIC_LOG_FORMATTER.call(record));
       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
@@ -33,19 +31,16 @@ main() {
 
     test('appends error message when present', () {
       LogRecord record =
-      new LogRecord(Level.INFO, 'formatted message!', 'root', 'an error');
-      var formatRegexp =
-      new RegExp(
+          LogRecord(Level.INFO, 'formatted message!', 'root', 'an error');
+      var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!, error: an error');
       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
     });
 
     test('appends stack trace when present', () {
-      LogRecord record =
-      new LogRecord(Level.INFO, 'formatted message!', 'root', 'an error',
-          new FakeStackTrace('a stack trace'));
-      var formatRegexp =
-      new RegExp(
+      LogRecord record = LogRecord(Level.INFO, 'formatted message!', 'root',
+          'an error', FakeStackTrace('a stack trace'));
+      var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!, error: an error, stackTrace: a stack trace');
       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
     });
