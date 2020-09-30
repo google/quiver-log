@@ -1,8 +1,7 @@
 Quiver Log
 ======
 
-Quiver log is a set of logging utilities that make it easy to configure and
-manage Dart's built in logging capabilities.
+Quiver log is a set of logging utilities
 
 # Documentation
 
