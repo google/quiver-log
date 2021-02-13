@@ -128,7 +128,7 @@ const basicLogFormatter = BasicLogFormatter();
 
 /// Appends string messages to the console using print function
 class PrintAppender extends Appender {
-  /// Returns a new ConsoleAppender with the given [Formatter<String>]
+  /// Returns a new ConsoleAppender with the given [Formatter]
   PrintAppender(Formatter formatter) : super(formatter);
 
   @override
