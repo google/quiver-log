@@ -5,8 +5,8 @@ Quiver log is a set of logging utilities that make it easy to configure and
 manage Dart's built in logging capabilities.
 
 # Documentation
-
-https://google.github.io/quiver-log/
+[API Docs](http://www.dartdocs.org/documentation/quiver_log/latest) are
+available.
 
 # The Basics
 
@@ -26,13 +26,13 @@ Here is a simple example that sets up a `InMemoryAppender` with a
 import 'package:logging/logging.dart';
 import 'package:quiver_log/log.dart';
 
-class SimpleStringFormatter implements FormatterBase<String> {
+class SimpleStringFormatter implements Formatter {
   String call(LogRecord record) => record.message;
 }
 
 main() {
-  var logger = new Logger('quiver.TestLogger');
-  var appender = new InMemoryListAppender(new SimpleStringFormatter());
+  var logger = Logger('quiver.TestLogger');
+  var appender = InMemoryListAppender(SimpleStringFormatter());
   appender.attachLogger(logger);
 }
 ```
@@ -45,6 +45,14 @@ which uses Dart's print statement to write to the console,
 `BasicLogFormatter` is included and uses a "MMyy HH:mm:ss.S" format. Of course
 there is no limit to what kind of appenders you can create.
 
-To create a new kind of `Appender` just extend `Appender`. To create a new
-`Formatter` just implement the `Formatter` interface  or `FormatterBase` class if
-you need to hold state in your formatter. Take a look at PrintAppender and BasicLogFormatter for an example.
+To create a new kind of `Appender` simply extend `Appender`. To create a new
+`Formatter` just implement the `Formatter` abstract class. Take a look at
+PrintAppender and BasicLogFormatter for an example.
+
+# Making Changes and Running Tests
+
+All patches must be formatted using dartfmt and submitted with tests. To run the tests use:
+
+pub run test test/all_tests.dart
+pub run test -p chrome test/all_web_tests.dart 
+>>>>>>> upstream/master

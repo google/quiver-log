@@ -4,7 +4,8 @@ import 'package:logging/logging.dart';
 
 void main() {
   final _logger = Logger('testlogger');
-  final _logAppender = WebAppender.webConsole(BASIC_LOG_FORMATTER);
+  final _logAppender = WebAppender.webConsole(basicLogFormatter);
+
   Logger.root.level = Level.ALL;
   _logAppender.attachLogger(_logger);
 

@@ -1,4 +1,4 @@
-// Copyright 2013 Google Inc. All Rights Reserved.
+// Copyright 2019 Google Inc. All Rights Reserved.
 
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,8 +26,8 @@ void main() {
           LogRecord(Level.INFO, 'formatted message!', 'root');
       var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!');
-      print(BASIC_LOG_FORMATTER.call(record));
-      expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
+      basicLogFormatter.call(record);
+      expect(basicLogFormatter.call(record), matches(formatRegexp));
     });
 
     test('appends error message when present', () {
@@ -35,7 +35,7 @@ void main() {
           LogRecord(Level.INFO, 'formatted message!', 'root', 'an error');
       var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!, error: an error');
-      expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
+      expect(basicLogFormatter.call(record), matches(formatRegexp));
     });
 
     test('appends stack trace when present', () {
@@ -43,7 +43,7 @@ void main() {
           'an error', FakeStackTrace('a stack trace'));
       var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!, error: an error, stackTrace: a stack trace');
-      expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
+      expect(basicLogFormatter.call(record), matches(formatRegexp));
     });
   });
 }
