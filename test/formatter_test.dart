@@ -22,8 +22,7 @@ import 'package:test/test.dart';
 void main() {
   group('BasicLogFormatter', () {
     test('correctly formats LogRecord', () {
-      var record =
-          LogRecord(Level.INFO, 'formatted message!', 'root');
+      var record = LogRecord(Level.INFO, 'formatted message!', 'root');
       var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!');
       basicLogFormatter.call(record);

@@ -31,8 +31,7 @@ void main() {
       Logger.root.level = Level.ALL;
       logger = Logger('testlogger');
       fakeConsole = FakeConsole();
-      webAppender =
-          WebAppender.usingConsole(NoopFormatter(), fakeConsole!);
+      webAppender = WebAppender.usingConsole(NoopFormatter(), fakeConsole!);
       webAppender?.attachLogger(logger!);
     });
 

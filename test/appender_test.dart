@@ -52,8 +52,9 @@ void main() {
         logger.info('test message');
       }, (e, s) {
         failureDetected = true;
+
         expect(e, isA<AssertionError>());
-        expect(e, contains('failed to append'));
+        expect((e as AssertionError).message, contains('failed to append'));
       });
       expect(failureDetected, isTrue,
           reason: 'Failed to detect error in appender.');
