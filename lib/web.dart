@@ -13,6 +13,7 @@
 // limitations under the License.
 
 library quiver.log.web;
+
 import 'dart:html';
 import 'package:quiver_log/log.dart';
 import 'package:logging/logging.dart';

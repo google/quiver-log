@@ -13,6 +13,7 @@
 // limitations under the License.
 
 library quiver.log;
+
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';

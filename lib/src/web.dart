@@ -15,10 +15,11 @@ part of quiver.log.web;
 ///  Level.SHOUT => console.error
 class WebAppender extends Appender<String> {
   final Console _console;
-  UnmodifiableMapView<Level, Function> _levelToOutputFunction;
+  UnmodifiableMapView<Level, Function>? _levelToOutputFunction;
+
 
   WebAppender(Formatter<String> formatter, this._console) : super(formatter) {
-    _levelToOutputFunction = new UnmodifiableMapView({
+    _levelToOutputFunction = UnmodifiableMapView({
       Level.CONFIG: _console.log,
       Level.FINEST: _console.log,
       Level.FINER: _console.log,
@@ -32,16 +33,17 @@ class WebAppender extends Appender<String> {
 
   /// Constructor that creates appender which formats the messages using the
   /// [Formatter] and outputs to the supplied [Console].
-  factory WebAppender.usingConsole(Formatter<String> formatter, Console console)
-    => new WebAppender(formatter, console);
+  factory WebAppender.usingConsole(
+          Formatter<String> formatter, Console console) =>
+      WebAppender(formatter, console);
 
   /// Constructor that creates appender which formats the messages using the
   /// [Formatter] and outputs to Window.console
   factory WebAppender.webConsole(Formatter<String> formatter) =>
-      new WebAppender(formatter, window.console);
+      WebAppender(formatter, window.console);
 
   @override
   void append(LogRecord record, Formatter<String> formatter) {
-    _levelToOutputFunction[record.level](formatter.call(record));
+    _levelToOutputFunction![record.level]!(formatter.call(record));
   }
 }

@@ -58,18 +58,20 @@ abstract class Formatter<T> {
 /// Formatter accepts a [LogRecord] and returns a T
 abstract class FormatterBase<T> extends Formatter<T> {
   /// Formats a given [LogRecord] returning type T as a result
+  @override
   T call(LogRecord record);
 }
 
 /// Formats log messages using a simple pattern
 class BasicLogFormatter implements FormatterBase<String> {
-  static final DateFormat _dateFormat = new DateFormat('yyMMdd HH:mm:ss.S');
+  static final _dateFormat = DateFormat('yyMMdd HH:mm:ss.S');
 
   const BasicLogFormatter();
 
   /// Formats a [LogRecord] using the following pattern:
   ///
   /// MMyy HH:MM:ss.S level sequence loggerName message
+  @override
   String call(LogRecord record) {
     var message = '${_dateFormat.format(record.time)} '
         '${record.level} '
@@ -79,7 +81,7 @@ class BasicLogFormatter implements FormatterBase<String> {
     if (record.error != null) {
       message = '$message, error: ${record.error}';
     }
-    if (record.stackTrace!= null) {
+    if (record.stackTrace != null) {
       message = '$message, stackTrace: ${record.stackTrace}';
     }
     return message;
@@ -87,11 +89,10 @@ class BasicLogFormatter implements FormatterBase<String> {
 }
 
 /// Default instance of the BasicLogFormatter
-const BASIC_LOG_FORMATTER = const BasicLogFormatter();
+const BASIC_LOG_FORMATTER = BasicLogFormatter();
 
 /// Appends string messages to the console using print function
 class PrintAppender extends Appender<String> {
-
   /// Returns a new ConsoleAppender with the given [Formatter<String>]
   PrintAppender(Formatter<String> formatter) : super(formatter);
 

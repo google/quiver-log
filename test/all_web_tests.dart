@@ -16,7 +16,6 @@ library quiver.log.all_web_tests;
 
 import 'webappender_test.dart' as webappender;
 
-main() {
+void main() {
   webappender.main();
 }
-

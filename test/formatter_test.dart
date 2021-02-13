@@ -17,35 +17,31 @@ library quiver.log.formatter_test;
 
 import 'package:logging/logging.dart';
 import 'package:quiver_log/log.dart';
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
-main() {
+void main() {
   group('BasicLogFormatter', () {
     test('correctly formats LogRecord', () {
-      LogRecord record =
-      new LogRecord(Level.INFO, 'formatted message!', 'root');
-      var formatRegexp =
-      new RegExp(
+      var record =
+          LogRecord(Level.INFO, 'formatted message!', 'root');
+      var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!');
       print(BASIC_LOG_FORMATTER.call(record));
       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
     });
 
     test('appends error message when present', () {
-      LogRecord record =
-      new LogRecord(Level.INFO, 'formatted message!', 'root', 'an error');
-      var formatRegexp =
-      new RegExp(
+      var record =
+          LogRecord(Level.INFO, 'formatted message!', 'root', 'an error');
+      var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!, error: an error');
       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
     });
 
     test('appends stack trace when present', () {
-      LogRecord record =
-      new LogRecord(Level.INFO, 'formatted message!', 'root', 'an error',
-          new FakeStackTrace('a stack trace'));
-      var formatRegexp =
-      new RegExp(
+      var record = LogRecord(Level.INFO, 'formatted message!', 'root',
+          'an error', FakeStackTrace('a stack trace'));
+      var formatRegexp = RegExp(
           r'\d\d \d\d:\d\d:\d\d.\d\d\d INFO \d root+ formatted message!, error: an error, stackTrace: a stack trace');
       expect(BASIC_LOG_FORMATTER.call(record), matches(formatRegexp));
     });
@@ -57,5 +53,6 @@ class FakeStackTrace extends StackTrace {
 
   FakeStackTrace(this.value);
 
+  @override
   String toString() => value;
 }

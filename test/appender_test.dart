@@ -17,32 +17,37 @@ library quiver.log.appender_test;
 import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:quiver_log/log.dart';
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
-main() {
-  group('Appender', (){
-     test('Appends handles log message and formats before output', (){
-       var appender = new InMemoryListAppender(new SimpleStringFormatter());
-       var logger = new SimpleLogger();
-       appender.attachLogger(logger);
+void main() {
+  group('Appender', () {
+    test('Appends handles log message and formats before output', () {
+      var appender = InMemoryListAppender(SimpleStringFormatter());
+      var logger = SimpleLogger();
+      appender.attachLogger(logger);
 
-       logger.info('test message');
+      logger.info('test message');
 
-       expect(appender.messages.last, 'Formatted test message');
-     });
+      expect(appender.messages.last, 'Formatted test message');
+    });
   });
 }
 
 class SimpleLogger implements Logger {
-  StreamController<LogRecord> _controller = new StreamController(sync:true);
+  final _controller = StreamController<LogRecord>(sync: true);
+
+  @override
   Stream<LogRecord> get onRecord => _controller.stream;
 
-  void info(String msg, [Object message, StackTrace stackTrace]) =>
-    _controller.add(new LogRecord(Level.INFO, msg, 'simple'));
+  @override
+  void info(Object? msg, [Object? message, StackTrace? stackTrace]) =>
+      _controller.add(LogRecord(Level.INFO, msg.toString(), 'simple'));
 
-  noSuchMethod(Invocation i) {}
+  @override
+  dynamic noSuchMethod(Invocation i) {}
 }
 
-class SimpleStringFormatter implements FormatterBase<String>{
-  String call(LogRecord record) => "Formatted ${record.message}";
+class SimpleStringFormatter implements FormatterBase<String> {
+  @override
+  String call(LogRecord record) => 'Formatted ${record.message}';
 }
