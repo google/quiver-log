@@ -32,8 +32,7 @@ class WebAppender extends Appender {
 
   /// Constructor that creates appender which formats the messages using the
   /// [Formatter] and outputs to the supplied [Console].
-  factory WebAppender.usingConsole(
-          Formatter formatter, Console console) =>
+  factory WebAppender.usingConsole(Formatter formatter, Console console) =>
       WebAppender(formatter, console);
 
   /// Constructor that creates appender which formats the messages using the
