@@ -19,12 +19,12 @@ import 'dart:html';
 import 'package:logging/logging.dart';
 import 'package:quiver_log/log.dart';
 import 'package:quiver_log/web.dart';
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
-main() {
-  WebAppender webAppender;
-  Logger logger;
-  FakeConsole fakeConsole;
+void main() {
+  late WebAppender webAppender;
+  late Logger logger;
+  late FakeConsole fakeConsole;
 
   group('WebAppender', () {
     setUp(() {
@@ -94,7 +94,7 @@ main() {
 }
 
 class NoopFormatter implements Formatter {
-  const NoopFormatter();
+  @override
   String call(LogRecord record) => record.message;
 }
 
@@ -104,21 +104,26 @@ class FakeConsole implements Console {
   List warnMessages = [];
   List errorMessages = [];
 
-  void log(Object msg) {
+  @override
+  void log(Object? msg) {
     logMessages.add(msg);
   }
 
-  void info(Object msg) {
+  @override
+  void info(Object? msg) {
     infoMessages.add(msg);
   }
 
-  void warn(Object msg) {
+  @override
+  void warn(Object? msg) {
     warnMessages.add(msg);
   }
 
-  void error(Object msg) {
+  @override
+  void error(Object? msg) {
     errorMessages.add(msg);
   }
 
-  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

@@ -1,0 +1,1 @@
+This example shows a working implementation of the WebAppender and basic formatter on a simple Html Page. To see the output of the logger make sure your dev console is visible. 

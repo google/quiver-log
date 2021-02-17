@@ -17,9 +17,9 @@ library quiver.log.appender_test;
 import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:quiver_log/log.dart';
-import "package:test/test.dart";
+import 'package:test/test.dart';
 
-main() {
+void main() {
   group('Appender', () {
     test('Appends handles log message and formats before output', () {
       var appender = InMemoryListAppender(SimpleStringFormatter());
@@ -45,15 +45,16 @@ main() {
       // A new zone is used to ensure assert is not caught in the zone started
       // by the test harness.
       var failureDetected = false;
-      runZoned(() {
+      runZonedGuarded(() {
         var appender = ExceptionalAppender();
         var logger = SimpleLogger();
         appender.attachLogger(logger);
         logger.info('test message');
-      }, onError: (e) {
+      }, (e, s) {
         failureDetected = true;
-        expect(e, isInstanceOf<AssertionError>());
-        expect(e.message, contains('failed to append'));
+
+        expect(e, isA<AssertionError>());
+        expect((e as AssertionError).message, contains('failed to append'));
       });
       expect(failureDetected, isTrue,
           reason: 'Failed to detect error in appender.');
@@ -71,19 +72,25 @@ class ExceptionalAppender extends Appender {
 }
 
 class SimpleLogger implements Logger {
-  StreamController<LogRecord> _controller = StreamController(sync: true);
+  final _controller = StreamController<LogRecord>(sync: true);
+
+  @override
   Stream<LogRecord> get onRecord => _controller.stream;
 
-  void info(message, [Object error, StackTrace stackTrace]) =>
-      _controller.add(LogRecord(Level.INFO, message, 'simple'));
+  @override
+  void info(Object? msg, [Object? message, StackTrace? stackTrace]) =>
+      _controller.add(LogRecord(Level.INFO, msg.toString(), 'simple'));
 
-  noSuchMethod(Invocation i) {}
+  @override
+  dynamic noSuchMethod(Invocation i) {}
 }
 
 class SimpleStringFormatter implements Formatter {
+  @override
   String call(LogRecord record) => 'Formatted ${record.message}';
 }
 
 class ExceptionalFormatter implements Formatter {
+  @override
   String call(LogRecord record) => throw 'this aint good';
 }

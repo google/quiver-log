@@ -2,10 +2,10 @@ import 'package:quiver_log/log.dart';
 import 'package:quiver_log/web.dart';
 import 'package:logging/logging.dart';
 
+void main() {
+  final _logger = Logger('testlogger');
+  final _logAppender = WebAppender.webConsole(basicLogFormatter);
 
-main() {
-  Logger _logger = Logger('testlogger');
-  Appender _logAppender = WebAppender.webConsole(basicLogFormatter);
   Logger.root.level = Level.ALL;
   _logAppender.attachLogger(_logger);
 
@@ -17,5 +17,4 @@ main() {
   _logger.warning('warning message');
   _logger.severe('severe message');
   _logger.shout('severe message');
-
 }

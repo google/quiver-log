@@ -67,7 +67,7 @@ abstract class Appender {
 
 /// Interface defining log formatter.
 abstract class Formatter {
-  /// Returns a message of type T based on provided [LogRecord].
+  /// Returns a formatted string message based on [LogRecord].
   String call(LogRecord record);
 }
 
@@ -79,6 +79,7 @@ abstract class Formatter {
 class _ErrorDiagnosticFormatter implements Formatter {
   const _ErrorDiagnosticFormatter();
 
+  @override
   String call(LogRecord record) {
     var message = 'time: ${record.time} '
         'level: ${record.level} '
@@ -94,17 +95,18 @@ class _ErrorDiagnosticFormatter implements Formatter {
   }
 }
 
-const _diagnosticFormatter = const _ErrorDiagnosticFormatter();
+const _diagnosticFormatter = _ErrorDiagnosticFormatter();
 
 /// Formats log messages using a simple pattern
 class BasicLogFormatter implements Formatter {
-  static final DateFormat _dateFormat = DateFormat('yyMMdd HH:mm:ss.S');
+  static final _dateFormat = DateFormat('yyMMdd HH:mm:ss.S');
 
   const BasicLogFormatter();
 
   /// Formats a [LogRecord] using the following pattern:
   ///
   /// MMyy HH:MM:ss.S level sequence loggerName message
+  @override
   String call(LogRecord record) {
     var message = '${_dateFormat.format(record.time)} '
         '${record.level} '
@@ -122,7 +124,7 @@ class BasicLogFormatter implements Formatter {
 }
 
 /// Default instance of the BasicLogFormatter
-const BasicLogFormatter basicLogFormatter = const BasicLogFormatter();
+const basicLogFormatter = BasicLogFormatter();
 
 /// Appends string messages to the console using print function
 class PrintAppender extends Appender {

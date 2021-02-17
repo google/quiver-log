@@ -1,4 +1,7 @@
 # Changelog 
+## 2.0.0-nullsafety.0 - 02/12/2021
+- Updating for null safety and cleaning up basic package health.
+
 ## 1.0.7 - 10/22/2019
 - Introduce the changelog.
 - Improve handling of errors during formatting or appending by attempting to relog with safer alternatives.
