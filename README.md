@@ -53,5 +53,6 @@ PrintAppender and BasicLogFormatter for an example.
 
 All patches must be formatted using dartfmt and submitted with tests. To run the tests use:
 
-pub run test test/all_tests.dart
-pub run test -p chrome test/all_web_tests.dart
+dart pub run test test/all_tests.dart
+
+dart pub run test -p chrome test/all_web_tests.dart
