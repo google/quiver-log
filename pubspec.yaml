@@ -1,12 +1,11 @@
 name: quiver_log
-version: 2.0.0
+version: 2.0.1
 description: A logging utility for Dart, part of the Quiver utilities. Provides an easy to use Appender/Formatter model for Dart logging.
 homepage: https://github.com/google/quiver-log
 environment:
   sdk: '>=2.13.0 <3.0.0'
 documentation: http://google.github.io/quiver-log/
 dependencies:
-  analyzer: ^2.0.0
   intl: ^0.17.0
   logging: ^1.0.0
 dev_dependencies:
