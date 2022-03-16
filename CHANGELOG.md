@@ -1,7 +1,11 @@
 # Changelog 
+
+## 2.0.1 - 3/16/2022
+- Removing analyzer dependency
+
 ## 2.0.0 - 03/11/2022
 - Cutting clean major release for null-safety.
-
+ 
 ## 2.0.0-nullsafety.0 - 02/12/2021
 - Updating for null safety and cleaning up basic package health.
 
